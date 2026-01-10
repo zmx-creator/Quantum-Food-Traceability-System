@@ -49,8 +49,6 @@ The **qba-network/** folder contains network configuration files.
 ## License
 This project is licensed under the Apache License 2.0. For details, please see the LICENSE file.
 
-Note: This project uses Hyperledger Fabric v1.4, which itself is licensed under the Apache License 2.0. Please ensure compliance with all relevant open‑source license terms.
-
 
 
 
