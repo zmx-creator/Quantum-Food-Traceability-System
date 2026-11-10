@@ -1,0 +1,57 @@
+test:
+  name: qba-network-source-app
+  description: qba-network
+  workers:
+    type: local
+    number: 5
+
+  rounds:
+  - label: create-food-items
+    description: Create food items with production information
+    txNumber: 9000                   
+    rateControl:
+      type: fixed-rate
+      opts:
+        tps: 900                  
+    callback: ../chaincode/demo/callback/source-app-open.js
+
+  - label: add-ingredient-info
+    description: Add ingredient information to food items
+    txNumber: 9000
+    rateControl:
+      type: fixed-rate
+      opts:
+        tps: 900 
+    callback: ../chaincode/demo/callback/source-app-add-ing.js
+
+  - label: add-logistics-info
+    description: Add logistics information to food items
+    txNumber: 9000
+    rateControl:
+      type: fixed-rate 
+      opts:
+        tps: 900                     
+    callback: ../chaincode/demo/callback/source-app-add-log.js
+
+  - label: query-complete-info
+    description: Query complete food traceability information
+    txNumber: 9000
+    rateControl:
+      type: fixed-rate
+      opts:
+        tps: 900                      
+    callback: ../chaincode/demo/callback/source-app-query-all.js
+
+monitor:
+  interval: 1
+  type: 
+    - docker
+  docker:
+    containers:
+    - peer0.org1.example.com
+    - orderer0.example.com
+    - orderer1.example.com
+    - orderer2.example.com
+    - orderer3.example.com
+    - orderer4.example.com
+    

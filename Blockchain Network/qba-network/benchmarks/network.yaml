@@ -1,0 +1,94 @@
+name: Fabric
+version: "1.0"
+
+mutual-tls: false
+
+caliper:
+  blockchain: fabric
+  command:
+    start: scripts/gen.sh;scripts/utils.sh up
+    end: scripts/utils.sh
+
+info:
+  Version: 1.4.4
+  Size: 5 Orgs with 1 Peer
+  Orderer: QBA
+  Distribution: Single Host
+  StateDB: GoLevelDB
+
+clients:
+  peer0.org1.example.com:
+    client:
+      organization: Org1
+      credentialStore:
+        path: /tmp/crypto/org1.example
+        cryptoStore:
+          path: /tmp/crypto/org1.example
+      clientPrivateKey:
+        path: crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/key.pem
+      clientSignedCert:
+        path: crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
+
+channels:
+  mychannel:
+    configBinary: ./channel-artifacts/channel.tx
+    created: true
+    orderers:
+      - orderer0.example.com
+      - orderer1.example.com
+      - orderer2.example.com
+      - orderer3.example.com
+      - orderer4.example.com
+    peers:
+      peer0.org1.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+    - id: source-app
+      version: "1.0"
+      contractID: source-app
+      language: golang
+      path: ../chaincode/demo
+      targetPeers:
+      - peer0.org1.example.com
+
+organizations:
+  Org1:
+    mspid: Org1MSP
+    peers:
+    - peer0.org1.example.com
+    adminPrivateKey:
+      path: crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/key.pem
+    signedCert:
+      path: crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+
+orderers:
+  orderer0.example.com:
+    url: grpc://localhost:6050
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000
+  orderer1.example.com:
+    url: grpc://localhost:6051
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000
+  orderer2.example.com:
+    url: grpc://localhost:6052
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000
+  orderer3.example.com:
+    url: grpc://localhost:6053
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000
+  orderer4.example.com:
+    url: grpc://localhost:6054
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000
+
+peers:
+  peer0.org1.example.com:
+    url: grpc://localhost:7051
+    grpcOptions:
+      grpc.keepalive_time_ms: 600000

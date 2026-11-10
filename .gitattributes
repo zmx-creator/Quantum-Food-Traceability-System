@@ -1,0 +1,9 @@
+# Normalise line endings: LF in the index and in the working tree, so shell
+# scripts and Go sources stay usable on the Linux side without CRLF pollution.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.jpg binary
+*.block binary
+*.jar binary
+*.txt text eol=lf

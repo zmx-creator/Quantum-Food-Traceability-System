@@ -1,0 +1,57 @@
+diff --git a/common/tools/configtxgen/encoder/encoder.go b/common/tools/configtxgen/encoder/encoder.go
+index 7aea4ca3f..c95e36ffa 100644
+--- a/common/tools/configtxgen/encoder/encoder.go
++++ b/common/tools/configtxgen/encoder/encoder.go
+@@ -36,6 +36,8 @@ const (
+ var logger = flogging.MustGetLogger("common.tools.configtxgen.encoder")
+ 
+ const (
++	//ConsensusTypePbft = "pbft"
++	ConsensusTypeQBA = "qba"
+ 	// ConsensusTypeSolo identifies the solo consensus implementation.
+ 	ConsensusTypeSolo = "solo"
+ 	// ConsensusTypeKafka identifies the Kafka-based consensus implementation.
+@@ -212,6 +214,8 @@ func NewOrdererGroup(conf *genesisconfig.Orderer) (*cb.ConfigGroup, error) {
+ 	var err error
+ 
+ 	switch conf.OrdererType {
++	//case ConsensusTypePbft:
++	case ConsensusTypeQBA:
+ 	case ConsensusTypeSolo:
+ 	case ConsensusTypeKafka:
+ 		addValue(ordererGroup, channelconfig.KafkaBrokersValue(conf.Kafka.Brokers), channelconfig.AdminsPolicyKey)
+diff --git a/common/tools/configtxgen/localconfig/config.go b/common/tools/configtxgen/localconfig/config.go
+index fcb32728b..bace75aec 100644
+--- a/common/tools/configtxgen/localconfig/config.go
++++ b/common/tools/configtxgen/localconfig/config.go
+@@ -386,6 +386,7 @@ loop:
+ 	// Additional, consensus type-dependent initialization goes here
+ 	// Also using this to panic on unknown orderer type.
+ 	switch ord.OrdererType {
++	case "qba":
+ 	case "solo":
+ 		// nothing to be done here
+ 	case "kafka":
+diff --git a/orderer/common/server/main.go b/orderer/common/server/main.go
+index a44ac3e6d..0f0c24b4c 100644
+--- a/orderer/common/server/main.go
++++ b/orderer/common/server/main.go
+@@ -47,6 +47,8 @@ import (
+ 	"github.com/hyperledger/fabric/orderer/consensus"
+ 	"github.com/hyperledger/fabric/orderer/consensus/etcdraft"
+ 	"github.com/hyperledger/fabric/orderer/consensus/kafka"
++	//"github.com/hyperledger/fabric/orderer/consensus/pbft"
++	"github.com/hyperledger/fabric/orderer/consensus/qba"
+ 	"github.com/hyperledger/fabric/orderer/consensus/solo"
+ 	cb "github.com/hyperledger/fabric/protos/common"
+ 	ab "github.com/hyperledger/fabric/protos/orderer"
+@@ -646,7 +648,8 @@ func initializeMultichannelRegistrar(
+ 	consenters := make(map[string]consensus.Consenter)
+ 
+ 	registrar := multichannel.NewRegistrar(*conf, lf, signer, metricsProvider, callbacks...)
+-
++	//consenters["pbft"] = pbft.New()
++	consenters["qba"] = qba.New()
+ 	consenters["solo"] = solo.New()
+ 	var kafkaMetrics *kafka.Metrics
+ 	consenters["kafka"], kafkaMetrics = kafka.New(conf.Kafka, metricsProvider, healthChecker)

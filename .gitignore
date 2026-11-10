@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# Dependencies and build output
+# ---------------------------------------------------------------------------
+node_modules/
+Backend/target/
+Frontend/dist/
+*.class
+
+# ---------------------------------------------------------------------------
+# Runtime material that must never be committed: MSP private keys, ledgers and
+# the QDS key files. Regenerate with qba-network/scripts/gen.sh plus the QBA key
+# generator; see the note in Blockchain Network/README.md.
+# ---------------------------------------------------------------------------
+crypto-config/
+channel-artifacts/
+production/
+QBAKey/
+key_signer.txt
+key_forwarder.txt
+key_verifier.txt
+irreducible_coefficients.txt
+
+# Fabric MSP signing keys (keystore/<hash>_sk) and TLS private keys
+*_sk
+**/keystore/*
+**/tls/*.key
+**/wallets/
+**/wallet/
+
+# ---------------------------------------------------------------------------
+# Local environment overrides (committed .env.development/.env.production are
+# template only, so only the *.local variants are ignored)
+# ---------------------------------------------------------------------------
+Frontend/.env.local
+Frontend/.env.*.local
+
+# ---------------------------------------------------------------------------
+# Experiment output and logs
+# ---------------------------------------------------------------------------
+*.log
+report*.html
+caliper*.zip
+
+# ---------------------------------------------------------------------------
+# Editors and operating system
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+# Python bytecode from the acceptance helpers
+__pycache__/
+*.pyc
